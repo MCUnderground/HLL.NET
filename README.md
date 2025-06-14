@@ -42,7 +42,7 @@ Console.WriteLine($"Estimated unique count: {estimate:F2}");
 For more fine-grained control:
 
 ```csharp
-var hll = new HyperLogLog(precision: 14);
+var hll = new HyperLogLog<string>(precision: 14);
 
 hll.Add("apple");
 hll.Add("banana");

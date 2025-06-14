@@ -4,6 +4,11 @@
     {
         public byte Value { get; private set; }
 
+        public HllRegister(byte initialValue = 0)
+        {
+            Value = initialValue;
+        }
+
         public void Update(byte newValue)
         {
             if (newValue > Value)

@@ -6,15 +6,19 @@ using HLL.NET.Maths;
 
 namespace HLL.NET
 {
-    public class HyperLogLog
+    public class HyperLogLog<T> 
     {
         private readonly HllPrecision _precision;
         private readonly int _numRegisters;
         private readonly HllRegister[] _registers;
 
-        public HyperLogLog() : this(new HllPrecision(14)) { }
-        public HyperLogLog(HllPrecision precision)
+        private readonly IHasher<T> _hasher;
+
+        public HyperLogLog(IHasher<T> hasher = null) : this(new HllPrecision(14), hasher) { }
+        public HyperLogLog(HllPrecision precision, IHasher<T> hasher = null)
         {
+            _hasher = hasher == null ? HasherFactory.GetDefault<T>() : hasher;
+
             if (precision < 4 || precision > 16)
                 throw new ArgumentOutOfRangeException(nameof(precision), "Precision must be between 4 and 16");
 
@@ -26,9 +30,9 @@ namespace HLL.NET
                 _registers[i] = new HllRegister();
         }
 
-        public void Add(string item)
+        public void Add(T item)
         {
-            var hash = Hasher.Hash(item);
+            var hash = _hasher.Hash(item);
             var index = (int)(hash >> (64 - _precision));
             var w = hash << _precision;
             var leadingZeros = BitUtils.CountLeadingZeros(w) - _precision + 1;
@@ -67,5 +71,36 @@ namespace HLL.NET
                 default: return (0.7213 / (1 + 1.079 / _numRegisters)) * _numRegisters * _numRegisters;
             }
         }
+
+        const byte FormatVersion = 1;
+
+        public byte[] Serialize()
+        {
+            var data = new byte[3 + _registers.Length]; // version + hasherId + precision + registers
+            data[0] = FormatVersion;
+            data[1] = (byte)_precision.Value;
+            for (int i = 0; i < _registers.Length; i++)
+                data[i + 2] = _registers[i].Value;
+
+            return data;
+        }
+        public static HyperLogLog<T> Deserialize(byte[] data, IHasher<T> hasher)
+        {
+            if (data == null || data.Length < 4)
+                throw new ArgumentException("Invalid serialized data");
+
+            var version = data[0];
+            var precision = new HllPrecision(data[1]);
+
+            if (version != FormatVersion)
+                throw new NotSupportedException($"Unsupported HLL format version: {version}");
+
+            var hll = new HyperLogLog<T>(precision, hasher);
+            for (int i = 0; i < hll._registers.Length; i++)
+                hll._registers[i] = new HllRegister(data[i + 2]);
+
+            return hll;
+        }
+
     }
 }

@@ -40,15 +40,15 @@
         [InlineData(16)]
         public void Constructor_AllowsValidPrecisions(int precision)
         {
-            var hll = new HyperLogLog(precision);
+            var hll = new HyperLogLog<int>(precision);
             Assert.NotNull(hll);
         }
 
         [Fact]
         public void Constructor_ThrowsForInvalidPrecision()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new HyperLogLog(3));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new HyperLogLog(17));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new HyperLogLog<string>(3));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new HyperLogLog<string>(17));
         }
     }
 }
