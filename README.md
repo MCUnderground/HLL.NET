@@ -9,11 +9,12 @@ A fast and memory-efficient implementation of the [HyperLogLog](https://en.wikip
 
 ## 🚀 Features
 
-- ⚡ Efficient cardinality estimation
-- 🧠 Uses SHA256 for consistent 64-bit hashing
-- 🧪 Optional multiple-run estimation for higher accuracy
-- 🧱 Configurable precision with validation
-- 💼 .NET Standard compatible – works across most .NET platforms
+- ⚡ Efficient cardinality estimation with HyperLogLog algorithm
+- 🧠 Built-in support for multiple types: string, int, Guid, and more via custom hashers
+- 🔧 Easy to extend with your own IHasher<T> implementations for any data type
+- 🧪 Optional multiple-run estimation for improved accuracy and reduced variance
+- 🧱 Configurable precision (4–16) with built-in validation
+- 💼 Fully compatible with .NET Standard for broad platform support
 
 ---
 

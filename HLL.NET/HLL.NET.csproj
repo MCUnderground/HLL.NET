@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageId>HLL.NET</PackageId>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>MCUnderground</Authors>
 		<Description>A simple and efficient C# implementation of HyperLogLog for approximate cardinality estimation.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
