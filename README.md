@@ -16,15 +16,6 @@ A fast and memory-efficient implementation of the [HyperLogLog](https://en.wikip
 - 🧱 Configurable precision (4–16) with built-in validation
 - 💼 Fully compatible with .NET Standard for broad platform support
 
----
-
-## 📦 Installation
-
-```bash
-dotnet add package HLL.NET
-```
-
----
 
 
 ### ✅ Accuracy Highlights (based on benchmark tests)
@@ -39,6 +30,15 @@ Handles duplicate values correctly, estimating only **unique** cardinality. Exam
 - Input: 10,000 identical values
 - Estimated: ~10,000 (error: <1%)
 
+---
+
+## 📦 Installation
+
+```bash
+dotnet add package HLL.NET
+```
+
+---
 
 ## 🧑‍💻 Usage
 

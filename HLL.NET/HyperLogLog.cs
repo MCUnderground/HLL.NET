@@ -3,11 +3,16 @@ using HLL.NET.Models;
 using System.Linq;
 using System;
 using HLL.NET.Maths;
+using System.Text;
+using HLL.NET.Serialization;
 
 namespace HLL.NET
 {
     public class HyperLogLog<T> 
     {
+        internal HllRegister[] Registers => _registers;
+        internal HllPrecision Precision => _precision;
+
         private readonly HllPrecision _precision;
         private readonly int _numRegisters;
         private readonly HllRegister[] _registers;
@@ -74,36 +79,9 @@ namespace HLL.NET
                 default: return (0.7213 / (1 + 1.079 / _numRegisters)) * _numRegisters * _numRegisters;
             }
         }
+        public byte[] Serialize() => HllSerializer.Serialize(this);
 
-        const byte FormatVersion = 1;
-
-        public byte[] Serialize()
-        {
-            var data = new byte[3 + _registers.Length]; // version + hasherId + precision + registers
-            data[0] = FormatVersion;
-            data[1] = (byte)_precision.Value;
-            for (int i = 0; i < _registers.Length; i++)
-                data[i + 2] = _registers[i].Value;
-
-            return data;
-        }
-        public static HyperLogLog<T> Deserialize(byte[] data, IHasher<T> hasher)
-        {
-            if (data == null || data.Length < 4)
-                throw new ArgumentException("Invalid serialized data");
-
-            var version = data[0];
-            var precision = new HllPrecision(data[1]);
-
-            if (version != FormatVersion)
-                throw new NotSupportedException($"Unsupported HLL format version: {version}");
-
-            var hll = new HyperLogLog<T>(precision, hasher);
-            for (int i = 0; i < hll._registers.Length; i++)
-                hll._registers[i] = new HllRegister(data[i + 2]);
-
-            return hll;
-        }
-
+        public static HyperLogLog<T> Deserialize(byte[] data, IHasher<T> hasher) =>
+            HllSerializer.Deserialize<T>(data, hasher);
     }
 }

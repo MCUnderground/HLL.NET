@@ -20,5 +20,4 @@ Console.WriteLine($"Estimated unique count: {estimatedCount:F2}");
 Console.WriteLine($"Error:                  {Math.Abs(trueUniqueCount - estimatedCount) / trueUniqueCount:P2}");
 
 
-
 AccuracyTester.RunAllTests();

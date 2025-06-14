@@ -47,6 +47,23 @@ namespace HLL.NET.Tests
             Assert.Throws<NotSupportedException>(() =>
                 HyperLogLog<string>.Deserialize(data, _stringHasher));
         }
+
+        [Fact]
+        public void Deserialize_WrongType_ShouldThrow()
+        {
+            var stringHasher = new StringHasher();
+            var intHasher = new IntHasher(); // Assume you have one
+
+            var hllString = new HyperLogLog<string>(new HllPrecision(14), stringHasher);
+            hllString.Add("test");
+
+            byte[] serialized = hllString.Serialize();
+
+            // Attempt to deserialize as HyperLogLog<int>
+            Assert.Throws<InvalidOperationException>(() =>
+                HyperLogLog<int>.Deserialize(serialized, intHasher));
+        }
+
     }
 }
 
