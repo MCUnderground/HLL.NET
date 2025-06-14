@@ -1,4 +1,5 @@
 ﻿using HLL.NET;
+using HLL.NET.Examples;
 
 var items = new List<string>();
 
@@ -17,3 +18,7 @@ double estimatedCount = HyperLogLogEstimator.EstimateWithMultipleRuns(items, run
 Console.WriteLine($"True unique count:      {trueUniqueCount}");
 Console.WriteLine($"Estimated unique count: {estimatedCount:F2}");
 Console.WriteLine($"Error:                  {Math.Abs(trueUniqueCount - estimatedCount) / trueUniqueCount:P2}");
+
+
+
+AccuracyTester.RunAllTests();

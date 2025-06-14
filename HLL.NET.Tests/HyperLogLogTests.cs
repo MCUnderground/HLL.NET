@@ -50,5 +50,19 @@
             Assert.Throws<ArgumentOutOfRangeException>(() => new HyperLogLog<string>(3));
             Assert.Throws<ArgumentOutOfRangeException>(() => new HyperLogLog<string>(17));
         }
+
+        [Fact]
+        public void HandlesDuplicates()
+        {
+            var hll = new HyperLogLog<string>();
+            for (int i = 0; i < 10000; i++)
+                hll.Add("same_value");
+
+            var estimate = hll.Estimate();
+
+            // Use Assert.True for float tolerance in xUnit
+            Assert.True(Math.Abs(estimate - 1.0) < 0.1, $"Estimate was {estimate}, expected ~1.0");
+        }
+
     }
 }

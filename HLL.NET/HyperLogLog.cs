@@ -35,7 +35,7 @@ namespace HLL.NET
             var hash = _hasher.Hash(item);
             var index = (int)(hash >> (64 - _precision));
             var w = hash << _precision;
-            var leadingZeros = BitUtils.CountLeadingZeros(w) - _precision + 1;
+            var leadingZeros = BitUtils.CountLeadingZeros(w) + 1;
 
             _registers[index].Update((byte)leadingZeros);
         }
@@ -49,6 +49,9 @@ namespace HLL.NET
                 sum += 1.0 / Math.Pow(2.0, reg.Value);
 
             double estimate = alphaMM / sum;
+            if (double.IsNaN(estimate) || double.IsInfinity(estimate))
+                return 0;
+
 
             // Bias correction
             if (estimate <= (5.0 / 2.0) * _numRegisters)

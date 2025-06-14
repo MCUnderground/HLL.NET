@@ -11,8 +11,8 @@
 
         public void Update(byte newValue)
         {
-            if (newValue > Value)
-                Value = newValue;
+            if (newValue > 64) newValue = 64;
+            if (newValue > Value) Value = newValue;
         }
     }
 }
