@@ -45,6 +45,23 @@ namespace HLL.NET
             _registers[index].Update((byte)leadingZeros);
         }
 
+        public void Merge(HyperLogLog<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (Precision != other.Precision)
+                throw new InvalidOperationException("Cannot merge HyperLogLogs with different precisions.");
+
+            for (int i = 0; i < _numRegisters; i++)
+            {
+                _registers[i].Update(other._registers[i].Value);
+            }
+
+        }
+
+        public ulong Count => (ulong)Math.Round(Estimate());
+
         public double Estimate()
         {
             double alphaMM = GetAlphaMM();
